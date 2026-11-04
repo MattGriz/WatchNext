@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
+#include <map>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -9,6 +10,8 @@ using namespace std;
 // The edge values that go in the list
 struct Edge {
     int neighborMovieID;
+    int sharedFans = 0;
+    int sharedGenres = 0;
     double weight;
 };
 

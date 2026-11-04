@@ -8,9 +8,9 @@ void Graph::loadMovies(const string& movieFile) {
     string line;
 
     while (getline(file, line)) {
-        size_t position = line.find("::");
+        unsigned int position = line.find("::");
         string movieIDStr = line.substr(0, position);
-        size_t nextPosition = line.find("::", position + 2);
+        unsigned int nextPosition = line.find("::", position + 2);
 
         string title = line.substr(position + 2, nextPosition - position - 2);
         string genresStr = line.substr(nextPosition + 2);
@@ -35,9 +35,9 @@ void Graph::loadRatings(const string& ratingFile) {
     string line;
 
     while (getline(file, line)) {
-        size_t position = line.find("::");
+        unsigned int position = line.find("::");
         string userIDStr = line.substr(0, position);
-        size_t nextPosition = line.find("::", position + 2);
+        unsigned int nextPosition = line.find("::", position + 2);
 
         string movieIDStr = line.substr(position + 2, nextPosition - position - 2);
         string ratingStr = line.substr(nextPosition + 2, 1);
@@ -57,5 +57,71 @@ void Graph::loadRatings(const string& ratingFile) {
 
 void Graph::buildGraph() {
     // Implementation for building the graph from movie and rating files
+
+    // Store the number of shared fans for each movie pair
+    map<pair<int, int>, int> sharedFanCounts;
+    for (const auto& user : fanList) {
+
+        const vector<int>& userMovies = user.second;
+
+        for (unsigned int i = 0; i < userMovies.size(); ++i) {
+            for (unsigned int j = i + 1; j < userMovies.size(); ++j) {
+                // Make pairs for the movies and increment shared fan count
+                int movieA = userMovies[i];
+                int movieB = userMovies[j];
+
+                int first = min(movieA, movieB);
+                int second = max(movieA, movieB);
+
+                sharedFanCounts[{first, second}]++;
+            }
+        }
+    }
+
+    // Build  adjacency list / graph !!!!! finally
+    adjList.clear();
+
+    for (const auto& entry : sharedFanCounts) {
+
+        // get all movie information
+        int movieA = entry.first.first;
+        int movieB = entry.first.second;
+        int sharedFans = entry.second;
+
+        const Movie& A = movies.at(movieA);
+        const Movie& B = movies.at(movieB);
+
+        // handle genre counts
+        int sharedGenres = 0;
+
+        const vector<string>& genresA = A.genres;
+        const vector<string>& genresB = B.genres;
+
+        for (const string& genre : genresA) {
+            if (find(genresB.begin(), genresB.end(), genre) != genresB.end()) {
+                sharedGenres++;
+            }
+        }
+
+        // IMPORTANT: IF THEY DO NOT SHARE A GENRE, THEY DO NOT CONNECT
+        if (sharedGenres == 0) continue;
+
+        // Calulate weights: 1. standardize fan counts, 2. standardize genre count, 3. combine
+        double fanStandard = static_cast<double>(sharedFans) / (A.fanCount + B.fanCount - sharedFans);
+        double genreStandard = static_cast<double>(sharedGenres) / (genresA.size() + genresB.size() - sharedGenres);
+        double standard = 0.7 * fanStandard + 0.3 * genreStandard;
+
+        // calulate the weight
+        double weight = 1.0 - standard;
+
+        // ACTUALLy create the adjacency list
+        Edge edgeAB{movieB, sharedFans, sharedGenres, weight};
+        Edge edgeBA{movieA, sharedFans, sharedGenres, weight};
+
+        adjList[movieA].push_back(edgeAB);
+        adjList[movieB].push_back(edgeBA);
+    }
+
+
     //hello
 }
