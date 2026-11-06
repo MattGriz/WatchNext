@@ -42,9 +42,10 @@ public:
     void loadMovies(const string& movieFile);
     void loadRatings(const string& ratingFile);
 
-    // Functions to access movie connections
-    //idk yet
-
     // Functions to retrieve movie information
-    //idl yet
+    const vector<Edge>& getNeighbors(int movieID) const;
+
+    const Movie* getMovie(int movieID) const;
+
+    int getMovieID(const string& title) const;
 };

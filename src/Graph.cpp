@@ -1,6 +1,6 @@
 #include "Graph.h"
 
-Graph::Graph() {}
+
 
 void Graph::loadMovies(const string& movieFile) {
     // creates the map of the movies
@@ -122,6 +122,30 @@ void Graph::buildGraph() {
         adjList[movieB].push_back(edgeBA);
     }
 
+    const vector<Edge>& Graph::getNeighbors(int movieID) const {
+        if (adjList.find(movieID) != adjList.end()) {
+            return adjList.at(movieID);
+        } else {
+            static const vector<Edge> empty;
+            return empty;
+        }
+    }
 
+    const Movie* Graph::getMovie(int movieID) const {
+        if (movies.find(movieID) != movies.end()) {
+            return &movies.at(movieID);
+        } else {
+            return nullptr;
+        }
+    }
+
+    int Graph::getMovieID(const string& title) const {
+        for (const auto& entry : movies) {
+            if (entry.second.title == title) {
+                return entry.first;
+            }
+        }
+        return -1; 
+    }
     //hello
 }
