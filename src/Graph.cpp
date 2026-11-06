@@ -121,6 +121,7 @@ void Graph::buildGraph() {
         adjList[movieA].push_back(edgeAB);
         adjList[movieB].push_back(edgeBA);
     }
+}
 
     const vector<Edge>& Graph::getNeighbors(int movieID) const {
         if (adjList.find(movieID) != adjList.end()) {
@@ -148,4 +149,3 @@ void Graph::buildGraph() {
         return -1; 
     }
     //hello
-}
