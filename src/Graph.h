@@ -32,6 +32,7 @@ private:
     //maps handeling data from files
     unordered_map<int, Movie> movies;
     unordered_map<int, vector<int>> fanList;
+    unordered_map<string, int> titleToID;
 
 public:
     // Constructor

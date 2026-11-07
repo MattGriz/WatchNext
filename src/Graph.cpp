@@ -27,6 +27,7 @@ void Graph::loadMovies(const string& movieFile) {
         }
 
         movies[movieID] = {movieID, title, genres, 0};
+        titleToID[title] = movieID;
     }
 }
 
@@ -142,11 +143,11 @@ void Graph::buildGraph() {
     }
 
     int Graph::getMovieID(const string& title) const {
-        for (const auto& entry : movies) {
-            if (entry.second.title == title) {
-                return entry.first;
+        auto it = titleToID.find(title);
+        if (it != titleToID.end()) {
+                return it->second;
             }
-        }
-        return -1; 
+
+            return -1;
     }
     //hello
