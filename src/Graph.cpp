@@ -61,7 +61,8 @@ void Graph::buildGraph() {
     // Implementation for building the graph from movie and rating files
 
     // Store the number of shared fans for each movie pair
-    map<pair<int, int>, int> sharedFanCounts;
+    const int N = 3953;   // max movieID in movies.dat is 3952
+    vector<int> sharedFanCounts(N * N, 0);
     for (const auto& user : fanList) {
 
         const vector<int>& userMovies = user.second;
@@ -75,7 +76,7 @@ void Graph::buildGraph() {
                 int first = min(movieA, movieB);
                 int second = max(movieA, movieB);
 
-                sharedFanCounts[{first, second}]++;
+                sharedFanCounts[first * N + second]++;
             }
         }
     }
@@ -83,12 +84,10 @@ void Graph::buildGraph() {
     // Build  adjacency list / graph !!!!! finally
     adjList.clear();
 
-    for (const auto& entry : sharedFanCounts) {
-
-        // get all movie information
-        int movieA = entry.first.first;
-        int movieB = entry.first.second;
-        int sharedFans = entry.second;
+    for (int movieA = 0; movieA < N; ++movieA)
+    for (int movieB = movieA + 1; movieB < N; ++movieB) {
+        int sharedFans = sharedFanCounts[movieA * N + movieB];
+        if (sharedFans == 0) continue;
 
         const Movie& A = movies.at(movieA);
         const Movie& B = movies.at(movieB);

@@ -158,7 +158,7 @@ RecommendationResult Recommender::recommendDijkstra(int startMovieID, int count)
 
     //stop the clock
     auto end = chrono::high_resolution_clock::now();
-    result.executionTimeMs = chrono::duration<double, std::milli>(end - start).count();
+    result.runtimeMs = chrono::duration<double, std::milli>(end - start).count();
 
     return result;
 }
