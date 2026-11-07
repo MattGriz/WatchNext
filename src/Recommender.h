@@ -25,8 +25,7 @@ private:
 
 public:
     // Use the graph that main.cpp has already built
-    explicit Recommender(const Graph& graph);
-
+    Recommender(const Graph& graph);
     // Find recommendations using BFS
     RecommendationResult recommendBFS(
         int startMovieID,

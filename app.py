@@ -11,7 +11,7 @@ import streamlit as st
 EXE_NAMES = ["watchnext.exe", "watchnext"]
 EXE_FOLDERS = ["", "build", "build/Debug", "build/Release"]
 MOVIES_FILE = "data/movies.dat"
-SUBPROCESS_TIMEOUT = 60
+SUBPROCESS_TIMEOUT = 180
 MAX_MATCHES = 50
 ALGOS = {"BFS": "bfs", "Dijkstra": "dijkstra"}
 
